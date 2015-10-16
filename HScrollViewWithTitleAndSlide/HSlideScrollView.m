@@ -141,33 +141,6 @@
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     NSLog(@"停止拖拽");
-}
-
--(void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
-{
-    //    NSLog(@"scrollViewDidEndDecelerating");
-    
-    
-}
-
-
-
-// 滑动scrollView，并且手指离开时执行。一次有效滑动，只执行一次。
-// 当pagingEnabled属性为YES时，不调用，该方法
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
-    
-//    NSLog(@"scrollViewWillEndDragging");
-    
-}
-
-// 当开始滚动视图时，执行该方法。一次有效滑动（开始滑动，滑动一小段距离，只要手指不松开，只算一次滑动），只执行一次。
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
-    
-//    NSLog(@"scrollViewWillBeginDragging");
-    if ([scrollView isEqual:myContentScrollView]) {
-        contentScrollViewStartPosition = scrollView.contentOffset;
-    }
-    
     if ([scrollView isEqual:myContentScrollView]) {
         if (scrollDirection == DirectionRight) {
             
@@ -200,6 +173,33 @@
             }
         }
         
+    }
+    
+}
+
+-(void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+{
+    //    NSLog(@"scrollViewDidEndDecelerating");
+    
+    
+}
+
+
+
+// 滑动scrollView，并且手指离开时执行。一次有效滑动，只执行一次。
+// 当pagingEnabled属性为YES时，不调用，该方法
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
+    
+//    NSLog(@"scrollViewWillEndDragging");
+    
+}
+
+// 当开始滚动视图时，执行该方法。一次有效滑动（开始滑动，滑动一小段距离，只要手指不松开，只算一次滑动），只执行一次。
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    
+//    NSLog(@"scrollViewWillBeginDragging");
+    if ([scrollView isEqual:myContentScrollView]) {
+        contentScrollViewStartPosition = scrollView.contentOffset;
     }
 
 }
@@ -234,5 +234,7 @@
     }
     
 
+#warning 将执行TitleScrollView滚动的动作 和  ContentView相关联 而不是Slide
+    
 }
 @end
