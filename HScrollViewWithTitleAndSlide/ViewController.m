@@ -35,9 +35,7 @@
     CGRect slideScrollFrame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64);
     
     NSArray *titlesArray = [[NSArray alloc] initWithObjects:@"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", nil];
-    mySlideScrollView = [[HSlideScrollView alloc] initWithFrame:slideScrollFrame andTitleArrays:titlesArray andTitleScrollerViewHight:40.f andNumverOfTitlesPerPage:5];
-    mySlideScrollView.titleScrollViewColor = [UIColor lightGrayColor];
-    mySlideScrollView.slideColor = [UIColor greenColor];
+    mySlideScrollView = [[HSlideScrollView alloc] initWithFrame:slideScrollFrame andTitleArrays:titlesArray andTitleScrollerViewHight:40.f andNumverOfTitlesPerPage:7];
     
     [self.view addSubview:mySlideScrollView];
 

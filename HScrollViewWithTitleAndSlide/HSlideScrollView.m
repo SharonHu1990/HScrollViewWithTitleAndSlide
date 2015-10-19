@@ -10,9 +10,11 @@
 #import <math.h>
 #define SlideHeight 2.f
 #define ShowMoreButtonWidth 50.f
-#define TitleColor [UIColor whiteColor]
-#define TitleListHeaderViewColor [UIColor grayColor]
+#define TitleFontColor [UIColor grayColor]
+#define TitleListHeaderViewColor [UIColor lightGrayColor]
 #define TitleList_Title @"标题列表"
+#define SlideColor [UIColor greenColor]
+#define TitleScrollViewBackgroundColor [UIColor whiteColor]
 
 
 
@@ -86,12 +88,12 @@
  */
 -(void)loadTitleListHeaderView
 {
-    titleListHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, myTitleScrollViewHight)];
-    [titleTableView setBackgroundColor:TitleListHeaderViewColor];
+    titleListHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, myTitleScrollView.frame.origin.y, self.frame.size.width, myTitleScrollViewHight)];
+    [titleListHeaderView setBackgroundColor:TitleListHeaderViewColor];
     UILabel *titleLabel = [[UILabel alloc] init];
     [titleLabel setText:TitleList_Title];
     [titleLabel sizeToFit];
-    [titleLabel setCenter:CGPointMake(20, (myTitleScrollViewHight - titleLabel.frame.size.height)/2.0)];
+    [titleLabel setCenter:CGPointMake(titleLabel.frame.size.width/2.0 + 15, myTitleScrollViewHight/2.0)];
     [titleListHeaderView addSubview:titleLabel];
     [self addSubview:titleListHeaderView];
     [titleListHeaderView setAlpha:0.f];
@@ -103,6 +105,7 @@
 -(void)initiateSlideView
 {
     slideView = [[UIView alloc] initWithFrame:CGRectMake(0, myTitleScrollViewHight - SlideHeight, titleWidth, SlideHeight)];
+    [slideView setBackgroundColor:SlideColor];
     [myTitleScrollView addSubview:slideView];
 }
 
@@ -132,7 +135,7 @@
     for (int i = 0; i < titlesArray.count; i ++) {
         UIButton *titleButton = [[UIButton alloc] initWithFrame:CGRectMake(titleWidth * i, 0, titleWidth, myTitleScrollViewHight - SlideHeight)];
         [titleButton setTitle:titlesArray[i] forState:UIControlStateNormal];
-        [titleButton setTitleColor:TitleColor forState:UIControlStateNormal];
+        [titleButton setTitleColor:TitleFontColor forState:UIControlStateNormal];
         [titleButton setTag:i];
         [titleButton addTarget:self action:@selector(touchTheTitleButton:) forControlEvents:UIControlEventTouchUpInside];
         [myTitleScrollView addSubview:titleButton];
@@ -144,11 +147,15 @@
  */
 -(void)loadShowTotalButton
 {
-    UIView *showTotalButtonBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(myTitleScrollView.frame.size.width - ShowMoreButtonWidth, myTitleScrollView.frame.origin.y, ShowMoreButtonWidth, myTitleScrollViewHight)];
-    [showTotalButtonBackgroundView setBackgroundColor:[UIColor colorWithRed:255.0 green:255.0 blue:255.0 alpha:0.7]];
+    showTotalButtonBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(myTitleScrollView.frame.size.width - ShowMoreButtonWidth, myTitleScrollView.frame.origin.y, ShowMoreButtonWidth, myTitleScrollViewHight)];
+    [showTotalButtonBackgroundView setBackgroundColor:TitleScrollViewBackgroundColor];
+    [showTotalButtonBackgroundView.layer setShadowColor:[UIColor whiteColor].CGColor];
+    [showTotalButtonBackgroundView.layer setShadowOffset:CGSizeMake(-4, 0)];
+    [showTotalButtonBackgroundView.layer setShadowOpacity:0.8];
+    [showTotalButtonBackgroundView.layer setShadowRadius:4];
     [self addSubview:showTotalButtonBackgroundView];
     
-    UIButton *showTotalButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, ShowMoreButtonWidth, myTitleScrollViewHight)];
+    showTotalButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, ShowMoreButtonWidth, myTitleScrollViewHight)];
     [showTotalButton setImage:[UIImage imageNamed:@"arrow_down"] forState:UIControlStateNormal];
     [showTotalButton addTarget:self action:@selector(touchTheTotalButton:) forControlEvents:UIControlEventTouchUpInside];
     [showTotalButtonBackgroundView addSubview:showTotalButton];
@@ -164,7 +171,7 @@
     for (int i = 0; i < titlesArray.count; i++) {
         
         UIView *oneContentView = [[UIView alloc] initWithFrame:CGRectMake(i * myContentScrollView.frame.size.width, 0, myContentScrollView.frame.size.width, myContentScrollView.frame.size.height)];
-        
+        [oneContentView setBackgroundColor:[UIColor redColor]];
         UILabel *contentLB = [[UILabel alloc] init];
         [contentLB setText:titlesArray[i]];
         [contentLB setCenter:CGPointMake(myContentScrollView.center.x, myContentScrollView.center.y - myContentScrollView.frame.origin.y)];
@@ -175,18 +182,6 @@
         [myContentScrollView addSubview:oneContentView];
     }
 }
-
--(void)setSlideColor:(UIColor *)slideColor
-{
-    [slideView setBackgroundColor:slideColor];
-}
-
-
--(void)setTitleScrollViewColor:(UIColor *)titleScrollViewColor
-{
-    [myTitleScrollView setBackgroundColor:titleScrollViewColor];
-}
-
 
 -(void)touchTheTitleButton:(UIButton *)sender
 {
@@ -203,9 +198,17 @@
             sender.transform = CGAffineTransformRotate(sender.transform, M_PI_2*1.0);
             [titleListHeaderView setAlpha:0.f];
             [titleTableView setFrame:CGRectMake(0, myContentScrollView.frame.origin.y, myContentScrollView.frame.size.width, 0)];
+            [showTotalButtonBackgroundView setBackgroundColor:TitleScrollViewBackgroundColor];
+
             
         } completion:^(BOOL finished) {
             showTotalFlag = NO;
+            
+            
+            [showTotalButtonBackgroundView.layer setShadowColor:[UIColor whiteColor].CGColor];
+            [showTotalButtonBackgroundView.layer setShadowOffset:CGSizeMake(-4, 0)];
+            [showTotalButtonBackgroundView.layer setShadowOpacity:0.8];
+            [showTotalButtonBackgroundView.layer setShadowRadius:4];
         }];
         
         
@@ -218,7 +221,8 @@
             sender.transform = CGAffineTransformRotate(sender.transform, -M_PI_2*1.0);
             [titleListHeaderView setAlpha:1.0];
             [titleTableView setFrame:CGRectMake(0, myContentScrollView.frame.origin.y, myContentScrollView.frame.size.width, myContentScrollView.frame.size.height)];
-            
+            [showTotalButtonBackgroundView setBackgroundColor:TitleListHeaderViewColor];
+            [showTotalButtonBackgroundView.layer setShadowOpacity:0];
         } completion:^(BOOL finished) {
             showTotalFlag = YES;
         }];
@@ -256,6 +260,11 @@
         [cell setSeparatorInset:UIEdgeInsetsZero];
     }
     return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self touchTheTotalButton: showTotalButton];
 }
 
 

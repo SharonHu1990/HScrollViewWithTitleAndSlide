@@ -33,10 +33,9 @@ typedef enum : NSUInteger {
     BOOL showTotalFlag;//点击titleScrollView右侧的按钮展示全部标题列表
     UITableView *titleTableView;//title列表
     UIView *titleListHeaderView;//title列表上方的标题View
+    UIView *showTotalButtonBackgroundView;
+    UIButton *showTotalButton;
 }
-
-@property (nonatomic) UIColor* slideColor;
-@property (nonatomic) UIColor* titleScrollViewColor;
 
 
 -(instancetype)initWithFrame:(CGRect)frame andTitleArrays:(NSArray *)titles andTitleScrollerViewHight:(CGFloat)titleScrollViewHight andNumverOfTitlesPerPage:(NSInteger)numberOfTitlesPerPage;
