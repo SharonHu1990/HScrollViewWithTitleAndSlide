@@ -13,7 +13,7 @@ typedef enum : NSUInteger {
     DirectionRight,
 } ScrollDirection;
 
-@interface HSlideScrollView : UIView<UIScrollViewDelegate>
+@interface HSlideScrollView : UIView<UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate>
 {
     NSArray *titlesArray;
     CGFloat myTitleScrollViewHight;
@@ -28,9 +28,11 @@ typedef enum : NSUInteger {
     CGPoint contentScrollViewStartPosition;//开始拖拽的位置
     ScrollDirection scrollDirection;
     
-    BOOL titleTouchTopLeft;
-    BOOL titleTouchTopRight;
+
     
+    BOOL showTotalFlag;//点击titleScrollView右侧的按钮展示全部标题列表
+    UITableView *titleTableView;//title列表
+    UIView *titleListHeaderView;//title列表上方的标题View
 }
 
 @property (nonatomic) UIColor* slideColor;
