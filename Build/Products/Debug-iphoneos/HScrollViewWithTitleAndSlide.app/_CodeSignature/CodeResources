@@ -35,7 +35,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			439s1IopAB7+0eS2znmaHs+RmkE=
+			pbaWVAsv8GgHhheEast2VYvOX3o=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -53,7 +53,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			sZBdn0EX+rjo+s6j6Sa6YTB9Wks=
+			hzXbpmmen+jGkdkXLVnFJPdrUCQ=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -77,6 +77,10 @@
 		<key>embedded.mobileprovision</key>
 		<data>
 		xjoNo9pYNLXrvIn3BzMl2XJ6stc=
+		</data>
+		<key>tick.png</key>
+		<data>
+		mZ63gDrph1TvrW3KfNULQF4bVOQ=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -112,7 +116,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			439s1IopAB7+0eS2znmaHs+RmkE=
+			pbaWVAsv8GgHhheEast2VYvOX3o=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -130,7 +134,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			sZBdn0EX+rjo+s6j6Sa6YTB9Wks=
+			hzXbpmmen+jGkdkXLVnFJPdrUCQ=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -146,6 +150,10 @@
 		<key>embedded.mobileprovision</key>
 		<data>
 		xjoNo9pYNLXrvIn3BzMl2XJ6stc=
+		</data>
+		<key>tick.png</key>
+		<data>
+		mZ63gDrph1TvrW3KfNULQF4bVOQ=
 		</data>
 	</dict>
 	<key>rules</key>

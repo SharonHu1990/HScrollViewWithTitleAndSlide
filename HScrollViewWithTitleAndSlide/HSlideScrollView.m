@@ -9,19 +9,19 @@
 #import "HSlideScrollView.h"
 #import <math.h>
 #define SlideHeight 2.f
-#define ShowMoreButtonWidth 50.f
 #define TitleFontColor [UIColor grayColor]
 #define TitleListHeaderViewColor [UIColor lightGrayColor]
-#define TitleList_Title @"标题列表"
 #define SlideColor [UIColor greenColor]
 #define TitleScrollViewBackgroundColor [UIColor whiteColor]
-
+#define TickImageSize CGSizeMake(30.0,30.0)
+#define ArrowImageSize CGSizeMake(30.0,30.0)
+#define ArrowButtonBackgroundViewWidth 2*ArrowImageSize.width
 
 
 @implementation HSlideScrollView
 
 
--(instancetype)initWithFrame:(CGRect)frame andTitleArrays:(NSArray *)titles andTitleScrollerViewHight:(CGFloat)titleScrollViewHight andNumverOfTitlesPerPage:(NSInteger)numberOfTitlesPerPage//每一页显示的标题的个数
+-(instancetype)initWithFrame:(CGRect)frame andTitleArrays:(NSArray *)titles andTitleScrollerViewHight:(CGFloat)titleScrollViewHight andNumverOfTitlesPerPage:(NSInteger)numberOfTitlesPerPage andArrowImage:(UIImage *)arrowImage andTickImage:(UIImage *)tickImage andTitleListTitle:(NSString *)titleListTitle//每一页显示的标题的个数
 {
     
     if (self == [super initWithFrame:frame]) {
@@ -29,8 +29,10 @@
         titlesArray = titles;
         myTitleScrollViewHight = titleScrollViewHight;
         myNumberOfTitlesPerPage = numberOfTitlesPerPage;
-        
         titleWidth = frame.size.width / numberOfTitlesPerPage;
+        myArrowImage = arrowImage;
+        myTickImage = tickImage;
+        myTitleListTitle = titleListTitle;
         
         [self initiateTitleScrollView];
         [self loadTitleButtons];
@@ -42,13 +44,6 @@
     }
     return self;
 }
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 
 
 /**
@@ -91,7 +86,7 @@
     titleListHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, myTitleScrollView.frame.origin.y, self.frame.size.width, myTitleScrollViewHight)];
     [titleListHeaderView setBackgroundColor:TitleListHeaderViewColor];
     UILabel *titleLabel = [[UILabel alloc] init];
-    [titleLabel setText:TitleList_Title];
+    [titleLabel setText:myTitleListTitle];
     [titleLabel sizeToFit];
     [titleLabel setCenter:CGPointMake(titleLabel.frame.size.width/2.0 + 15, myTitleScrollViewHight/2.0)];
     [titleListHeaderView addSubview:titleLabel];
@@ -147,18 +142,18 @@
  */
 -(void)loadShowTotalButton
 {
-    showTotalButtonBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(myTitleScrollView.frame.size.width - ShowMoreButtonWidth, myTitleScrollView.frame.origin.y, ShowMoreButtonWidth, myTitleScrollViewHight)];
-    [showTotalButtonBackgroundView setBackgroundColor:TitleScrollViewBackgroundColor];
-    [showTotalButtonBackgroundView.layer setShadowColor:[UIColor whiteColor].CGColor];
-    [showTotalButtonBackgroundView.layer setShadowOffset:CGSizeMake(-4, 0)];
-    [showTotalButtonBackgroundView.layer setShadowOpacity:0.8];
-    [showTotalButtonBackgroundView.layer setShadowRadius:4];
-    [self addSubview:showTotalButtonBackgroundView];
+    arrowButtonBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(myTitleScrollView.frame.size.width - ArrowButtonBackgroundViewWidth, myTitleScrollView.frame.origin.y, ArrowButtonBackgroundViewWidth, myTitleScrollViewHight)];
+    [arrowButtonBackgroundView setBackgroundColor:TitleScrollViewBackgroundColor];
+    [arrowButtonBackgroundView.layer setShadowColor:[UIColor whiteColor].CGColor];
+    [arrowButtonBackgroundView.layer setShadowOffset:CGSizeMake(-4, 0)];
+    [arrowButtonBackgroundView.layer setShadowOpacity:0.8];
+    [arrowButtonBackgroundView.layer setShadowRadius:4];
+    [self addSubview:arrowButtonBackgroundView];
     
-    showTotalButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, ShowMoreButtonWidth, myTitleScrollViewHight)];
-    [showTotalButton setImage:[UIImage imageNamed:@"arrow_down"] forState:UIControlStateNormal];
-    [showTotalButton addTarget:self action:@selector(touchTheTotalButton:) forControlEvents:UIControlEventTouchUpInside];
-    [showTotalButtonBackgroundView addSubview:showTotalButton];
+    showTotalButton = [[UIButton alloc] initWithFrame:CGRectMake((arrowButtonBackgroundView.frame.size.width - ArrowImageSize.width)/2.0, (arrowButtonBackgroundView.frame.size.height - ArrowImageSize.height)/2.0, ArrowImageSize.width, ArrowImageSize.height)];
+    [showTotalButton setImage:myArrowImage forState:UIControlStateNormal];
+    [showTotalButton addTarget:self action:@selector(touchTheArrowButton:) forControlEvents:UIControlEventTouchUpInside];
+    [arrowButtonBackgroundView addSubview:showTotalButton];
 }
 
 /**
@@ -183,12 +178,24 @@
     }
 }
 
+/**
+ *  点击标题
+ *
+ *  @param sender 标题按钮
+ */
 -(void)touchTheTitleButton:(UIButton *)sender
 {
+    selectedTitleListRow = sender.tag;
     [myContentScrollView setContentOffset:CGPointMake(myContentScrollView.frame.size.width * sender.tag, 0) animated:YES];
+    [self manageTheScrollEventWithIndex:sender.tag];
 }
 
--(void)touchTheTotalButton:(UIButton *)sender
+/**
+ *  点击箭头按钮
+ *
+ *  @param sender 箭头按钮
+ */
+-(void)touchTheArrowButton:(UIButton *)sender
 {
     
     if (showTotalFlag) {
@@ -198,34 +205,54 @@
             sender.transform = CGAffineTransformRotate(sender.transform, M_PI_2*1.0);
             [titleListHeaderView setAlpha:0.f];
             [titleTableView setFrame:CGRectMake(0, myContentScrollView.frame.origin.y, myContentScrollView.frame.size.width, 0)];
-            [showTotalButtonBackgroundView setBackgroundColor:TitleScrollViewBackgroundColor];
+            [arrowButtonBackgroundView setBackgroundColor:TitleScrollViewBackgroundColor];
 
             
         } completion:^(BOOL finished) {
             showTotalFlag = NO;
             
+            [titleTableView reloadData];
             
-            [showTotalButtonBackgroundView.layer setShadowColor:[UIColor whiteColor].CGColor];
-            [showTotalButtonBackgroundView.layer setShadowOffset:CGSizeMake(-4, 0)];
-            [showTotalButtonBackgroundView.layer setShadowOpacity:0.8];
-            [showTotalButtonBackgroundView.layer setShadowRadius:4];
+            [arrowButtonBackgroundView.layer setShadowColor:[UIColor whiteColor].CGColor];
+            [arrowButtonBackgroundView.layer setShadowOffset:CGSizeMake(-4, 0)];
+            [arrowButtonBackgroundView.layer setShadowOpacity:0.8];
+            [arrowButtonBackgroundView.layer setShadowRadius:4];
         }];
         
         
         
     }
-    else {
+    else
+    {
         [UIView animateWithDuration:0.3 animations:^{
             //逆时针旋转180度
             sender.transform = CGAffineTransformRotate(sender.transform, -M_PI_2*1.0);
             sender.transform = CGAffineTransformRotate(sender.transform, -M_PI_2*1.0);
             [titleListHeaderView setAlpha:1.0];
             [titleTableView setFrame:CGRectMake(0, myContentScrollView.frame.origin.y, myContentScrollView.frame.size.width, myContentScrollView.frame.size.height)];
-            [showTotalButtonBackgroundView setBackgroundColor:TitleListHeaderViewColor];
-            [showTotalButtonBackgroundView.layer setShadowOpacity:0];
+            [arrowButtonBackgroundView setBackgroundColor:TitleListHeaderViewColor];
+            [arrowButtonBackgroundView.layer setShadowOpacity:0];
         } completion:^(BOOL finished) {
             showTotalFlag = YES;
+            
         }];
+    }
+}
+
+
+/**
+ *  管理滚动事件，使各项得以匹配
+ *
+ *  @param index (从0开始，滚动到第一个title)
+ */
+-(void)manageTheScrollEventWithIndex:(NSInteger)index
+{
+    if(index < myNumberOfTitlesPerPage/2){
+        [myTitleScrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+    }else if((titlesArray.count - index) <= ceilf(myNumberOfTitlesPerPage/2.0) - 2){
+        [myTitleScrollView setContentOffset:CGPointMake((titlesArray.count - myNumberOfTitlesPerPage +1)*titleWidth, 0) animated:YES];
+    }else{
+        [myTitleScrollView setContentOffset:CGPointMake((index - myNumberOfTitlesPerPage/2)*titleWidth, 0) animated:YES];
     }
 }
 
@@ -252,6 +279,23 @@
     
     //configure cell
     [cell.textLabel setText:titlesArray[indexPath.row]];
+    
+    if ([cell.contentView viewWithTag:2] == nil) {
+        UIImage *cellTickImage = myTickImage;
+        UIImageView *tickImageView = [[UIImageView alloc] initWithFrame:CGRectMake(self.frame.size.width - 15 - TickImageSize.width, (cell.frame.size.height - TickImageSize.height)/2.0, TickImageSize.width, TickImageSize.height)];
+        [tickImageView setImage:cellTickImage];
+        [cell.contentView addSubview:tickImageView];
+        [tickImageView setTag:2];
+    }
+    
+    if (indexPath.row == selectedTitleListRow) {
+        [[cell.contentView viewWithTag:2] setHidden:NO];
+    }else
+    {
+        [[cell.contentView viewWithTag:2] setHidden:YES];
+    }
+
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
         [cell setLayoutMargins:UIEdgeInsetsZero];
     }
@@ -264,7 +308,12 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self touchTheTotalButton: showTotalButton];
+    selectedTitleListRow = indexPath.row;
+    [self touchTheArrowButton: showTotalButton];
+    //滑动到相应的Tab
+    [myContentScrollView setContentOffset:CGPointMake(myContentScrollView.frame.size.width * indexPath.row, 0) animated:YES];
+    [self manageTheScrollEventWithIndex:indexPath.row];
+
 }
 
 
@@ -273,49 +322,23 @@
 // 滚动视图减速完成，滚动将停止时，调用该方法。一次有效滑动，只执行一次。
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     
-//    NSLog(@"DidEndDecelerating");
     if ([scrollView isEqual:myContentScrollView]) {
+        selectedTitleListRow = myContentScrollView.contentOffset.x / myContentScrollView.frame.size.width;
     }
 }
 
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    NSLog(@"DidEndDragging");
-    
-    
     //向上取整
-    int page = ceilf(myContentScrollView.contentOffset.x / myContentScrollView.frame.size.width);
-    NSLog(@"page:%d",page);
-    
-    if (page >= myNumberOfTitlesPerPage/2  && (titlesArray.count - page) > ceil(myNumberOfTitlesPerPage/2.0) - 2) {
-        
-        [myTitleScrollView setContentOffset:CGPointMake((page - myNumberOfTitlesPerPage/2)*titleWidth, 0) animated:YES];
-        NSLog(@"%f",myTitleScrollView.contentOffset.x);
-    }
-   
-}
-
--(void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
-{
-
-//    NSLog(@"WillBeginDecelerating");
-
+    NSInteger index = ceilf(myContentScrollView.contentOffset.x / myContentScrollView.frame.size.width);
+    [self manageTheScrollEventWithIndex:index];
 }
 
 
-
-// 滑动scrollView，并且手指离开时执行。一次有效滑动，只执行一次。
-// 当pagingEnabled属性为YES时，不调用，该方法
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
-    
-//    NSLog(@"scrollViewWillEndDragging");
-    
-}
 
 // 当开始滚动视图时，执行该方法。一次有效滑动（开始滑动，滑动一小段距离，只要手指不松开，只算一次滑动），只执行一次。
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
-    
-//    NSLog(@"scrollViewWillBeginDragging");
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
     if ([scrollView isEqual:myContentScrollView]) {
         contentScrollViewStartPosition = scrollView.contentOffset;
     }
@@ -323,16 +346,8 @@
 }
 
 
-// 当滚动视图动画完成后，调用该方法，如果没有动画，那么该方法将不被调用
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
-    
-//    NSLog(@"scrollViewDidEndScrollingAnimation");
-}
-
-
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-//    NSLog(@"didScroll");
     if ([scrollView isEqual:myContentScrollView]) {
         contentScrollViewCurrentPosition = scrollView.contentOffset;
         
@@ -349,10 +364,6 @@
                  contentScrollViewCurrentPosition.x > 0){
             scrollDirection = DirectionRight;
         }
-}
-    
-    
-#warning 将执行TitleScrollView滚动的动作 和  ContentView相关联 而不是Slide
-    
+    }
 }
 @end

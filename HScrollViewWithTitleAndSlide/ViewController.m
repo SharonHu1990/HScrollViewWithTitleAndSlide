@@ -33,13 +33,9 @@
 -(void)addMySlideScrollView
 {
     CGRect slideScrollFrame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64);
-    
-    NSArray *titlesArray = [[NSArray alloc] initWithObjects:@"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", nil];
-    mySlideScrollView = [[HSlideScrollView alloc] initWithFrame:slideScrollFrame andTitleArrays:titlesArray andTitleScrollerViewHight:40.f andNumverOfTitlesPerPage:7];
-    
+    NSArray *titlesArray = [[NSArray alloc] initWithObjects:@"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N", nil];
+    mySlideScrollView = [[HSlideScrollView alloc] initWithFrame:slideScrollFrame andTitleArrays:titlesArray andTitleScrollerViewHight:40.f andNumverOfTitlesPerPage:7 andArrowImage:[UIImage imageNamed:@"arrow_down"] andTickImage:[UIImage imageNamed:@"tick"] andTitleListTitle:@"分类"];
     [self.view addSubview:mySlideScrollView];
-
-
 }
 
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A6BCDAD1BD5D474003A0A11 /* tick.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A6BCDAC1BD5D474003A0A11 /* tick.png */; settings = {ASSET_TAGS = (); }; };
 		0A84D9291BCE52CF00E644CE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A84D9281BCE52CF00E644CE /* main.m */; };
 		0A84D92C1BCE52CF00E644CE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A84D92B1BCE52CF00E644CE /* AppDelegate.m */; };
 		0A84D92F1BCE52CF00E644CE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A84D92E1BCE52CF00E644CE /* ViewController.m */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A6BCDAC1BD5D474003A0A11 /* tick.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tick.png; sourceTree = "<group>"; };
 		0A84D9241BCE52CF00E644CE /* HScrollViewWithTitleAndSlide.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HScrollViewWithTitleAndSlide.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A84D9281BCE52CF00E644CE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0A84D92A1BCE52CF00E644CE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 		0ACD86041BD4B76600D07B5E /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0A6BCDAC1BD5D474003A0A11 /* tick.png */,
 				0ACD86051BD4B76600D07B5E /* arrow_down.png */,
 				0ACD86061BD4B76600D07B5E /* arrow_up.png */,
 			);
@@ -173,6 +176,7 @@
 			files = (
 				0ACD86081BD4B76600D07B5E /* arrow_up.png in Resources */,
 				0A84D9371BCE52CF00E644CE /* LaunchScreen.storyboard in Resources */,
+				0A6BCDAD1BD5D474003A0A11 /* tick.png in Resources */,
 				0A84D9341BCE52CF00E644CE /* Assets.xcassets in Resources */,
 				0A84D9321BCE52CF00E644CE /* Main.storyboard in Resources */,
 				0ACD86071BD4B76600D07B5E /* arrow_down.png in Resources */,
