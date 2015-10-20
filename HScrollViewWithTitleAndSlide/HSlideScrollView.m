@@ -331,6 +331,7 @@
 {
     //向上取整
     NSInteger index = ceilf(myContentScrollView.contentOffset.x / myContentScrollView.frame.size.width);
+    selectedTitleListRow = index;
     [self manageTheScrollEventWithIndex:index];
 }
 
